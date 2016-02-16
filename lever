@@ -1,0 +1,82 @@
+package de.tudarmstadt.fop.project.parser;
+
+import java.util.StringTokenizer;
+
+/**
+ * Abstract Lexer class for transforming a string into a token stream.
+ */
+public abstract class Lexer {
+	
+	/** End-of-input indicator */
+	public static final char EOF = (char)-1; 
+	
+	/** The lexer input */
+	protected String input;
+	
+	/** The single look-ahead character */
+	protected char la;
+	
+	/** The current input position */
+	protected int pos;
+	
+	/**
+	 * Initializes a Lexer on a given input string. 
+	 * @param input the input string
+	 */
+	public Lexer(String input){ 
+		this.input = input;
+		pos = -1;
+		consume();
+	}
+	/**
+	 * Consume the next character into the look-ahead character field.
+	 */
+	public void consume() { 
+	pos++;
+	if ( pos >= input.length() ) 
+		la = EOF;
+	else
+		la = input.charAt(pos);
+	}
+      /**
+       * Check whether the look-ahead character matches a given character.
+       * If so, consume it, else throw an exception. *
+       * @param c the expected character
+       * @throws ParseException if the look-ahead character does not match 
+       */
+	public void match(char c) throws ParseException { 
+		if( la == c )
+			consume();
+		else
+			throw new ParseException("Expected char ’" + c + "’ but found: "+la);
+	}
+	
+	public abstract class StringTokenizerDemo {
+		   public void main(String[] args) {
+		   // creating string tokenizer
+		   StringTokenizer st = new StringTokenizer(input);
+		      
+		   // checking next token
+		   System.out.println("Next token is : " + st.nextToken());
+		   
+		   if (input == null){
+			   return;
+			   
+		   }
+	/**
+	 * Output the next token on the input string (or an
+	 * {@link tokens.EofToken EofToken} if there is no further token).
+	 * @return the next token or {@link tokens.EofToken EofToken}
+	 * @throws ParseException in case the next token cannot be determined correctly 
+	 */
+	public abstract Token nextToken() throws ParseException;
+	
+	/**
+	 * Checks whether there is a next character.
+	 * @return true if there is a next (look-ahead) character 
+	 */
+	public boolean hasNext(){ 
+		return la != EOF;
+		}
+	}
+}
